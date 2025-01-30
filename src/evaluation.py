@@ -8,10 +8,10 @@ Evaluation and visualization tools for deconvolution results.
 """
 import numpy as np
 import pandas as pd
-import seaborn as sns
-from tqdm import tqdm
-from scipy import stats
 import matplotlib.pyplot as plt
+
+from scipy import stats
+from matplotlib import colors as mcolors
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 class DeconvPlot():
@@ -173,6 +173,24 @@ class DeconvPlot():
         #plt.title(title,fontsize=12)
         plt.legend(shadow=True,bbox_to_anchor=(1.0, 1), loc='upper left')
         plt.show()
+
+def eval_deconv(dec_name_list=[[0],[1]], val_name_list=[["Monocytes"],["CD4Tcells"]], 
+                deconv_df=None, y_df=None):
+    # overall
+    assert len(dec_name_list) == len(val_name_list)
+    tab_colors = mcolors.TABLEAU_COLORS
+    color_list = list(tab_colors.keys())
+    loop_n = len(dec_name_list) // len(color_list)
+    color_list = color_list * (loop_n+1)
+    overall_res = []
+    for i in range(len(dec_name_list)):
+        dec_name = dec_name_list[i]
+        val_name = val_name_list[i]
+        plot_dat = DeconvPlot(deconv_df=deconv_df,val_df=y_df,dec_name=dec_name,val_name=val_name,plot_size=20,dpi=50)
+        res = plot_dat.plot_simple_corr(color=color_list[i],title=f'Topic:{dec_name} vs {val_name}',target_samples=None)
+        overall_res.append(res)
+    
+    return overall_res
 
 
 def main():

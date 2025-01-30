@@ -12,11 +12,13 @@ import copy
 import itertools
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 from sklearn.impute import SimpleImputer
 from scipy.stats import rankdata
 from tqdm import tqdm
 from combat.pycombat import pycombat
-import matplotlib.pyplot as plt
 
 class ReferencePreprocessing():
     def __init__(self, verbose=True):
