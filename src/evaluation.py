@@ -44,7 +44,7 @@ class DeconvPlot():
         mean_y = np.mean(y)
         mean_x = np.mean(x)
         var_y = np.var(y)
-        var_x = np.var(y)
+        var_x = np.var(x)
         sd_y = np.std(y)
         sd_x = np.std(x)
 
