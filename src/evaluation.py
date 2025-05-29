@@ -125,9 +125,9 @@ class DeconvPlot():
             pass
 
         return performance,total_x,total_y
-
     
-    def overlap_singles(self,evalxy, title_list=['Naive B','Naive CD4 T','CD8 T','NK','Monocytes']):
+    
+    def overlap_singles(self, evalxy, title_list=['Naive B','Naive CD4 T','CD8 T','NK','Monocytes']):
         total_x = []
         for t in evalxy[0]:
             total_x.extend(t)
@@ -175,7 +175,7 @@ class DeconvPlot():
         plt.show()
 
 def eval_deconv(dec_name_list=[[0],[1]], val_name_list=[["Monocytes"],["CD4Tcells"]], 
-                deconv_df=None, y_df=None):
+                deconv_df=None, y_df=None, do_plot=True, overlap=False):
     # overall
     assert len(dec_name_list) == len(val_name_list)
     tab_colors = mcolors.TABLEAU_COLORS
@@ -183,12 +183,22 @@ def eval_deconv(dec_name_list=[[0],[1]], val_name_list=[["Monocytes"],["CD4Tcell
     loop_n = len(dec_name_list) // len(color_list)
     color_list = color_list * (loop_n+1)
     overall_res = []
+
+    dec_eval_x = []
+    ref_eval_y = []
     for i in range(len(dec_name_list)):
         dec_name = dec_name_list[i]
         val_name = val_name_list[i]
-        plot_dat = DeconvPlot(deconv_df=deconv_df,val_df=y_df,dec_name=dec_name,val_name=val_name,plot_size=20,dpi=50)
+        plot_dat = DeconvPlot(deconv_df=deconv_df,val_df=y_df,dec_name=dec_name,val_name=val_name,plot_size=20,dpi=50,do_plot=do_plot)
         res = plot_dat.plot_simple_corr(color=color_list[i],title=f'Topic:{dec_name} vs {val_name}',target_samples=None)
         overall_res.append(res)
+
+        dec_eval_x.append(res[1])
+        ref_eval_y.append(res[2])
+    
+    if overlap:
+        evalxy = [dec_eval_x, ref_eval_y]
+        plot_dat.overlap_singles(evalxy=evalxy,title_list=dec_name_list)
     
     return overall_res
 
